@@ -11,7 +11,7 @@ def rc(c):
 
 # Read FASTQ file to get rNMP in raw reads
 # rNMP should be reverse compliment of 12th base (8 UMI and 3 barcode before rNMP)
-def read_fastq(fr):
+def read_fastq(fr, deviation):
     rNMPs_raw = {}
     line_num = 1
     name = None
@@ -22,7 +22,7 @@ def read_fastq(fr):
             assert l[0] == '@', f'Invalid read name on line {line_num} in the fastq file {fr.name}!'
             name = l[1:].split(' ')[0]
         elif line_num %4 == 2:
-            rNMPs_raw[name] = rc(l[11])
+            rNMPs_raw[name] = rc(l[11+deviation])
         line_num += 1
     return rNMPs_raw
 
@@ -49,14 +49,21 @@ def read_genome(fr):
 
 # find rNMPs in BED file, which is 0 based. Compare to rNMP raw reads. And return the formatted string
 # Eg. chrI  15  16  .  .  + should match genome[chrI][15]
-def get_rNMP_aligned(l, genome, rNMPs_raw):
+def get_rNMP_aligned(l, genome, rNMPs_raw, deviation):
     ws = l.rstrip().split('\t')
-    rNMP_aligned = genome[ws[0]][int(ws[1])]
+    # upstream
+    if ws[5] == '+':
+        deviation = -deviation
+    # get base
+    if int(ws[1])+deviation < 0 or int(ws[1]) + deviation>=len(genome[ws[0]]):
+        rNMP_aligned = 'N'
+    else:
+        rNMP_aligned = genome[ws[0]][int(ws[1])+deviation]
     if ws[5] == '-':
         rNMP_aligned = rc(rNMP_aligned)
     name = ws[3].split('_')[0]
     rNMP_raw = rNMPs_raw[name]
-    return ws[:3] + [rNMP_raw, rNMP_aligned, ws[5]]
+    return [ws[0], str(int(ws[1])+deviation), str(int(ws[2]) + deviation), rNMP_raw, rNMP_aligned, ws[5]]
 
 
 def main():
@@ -64,11 +71,12 @@ def main():
     parser.add_argument('BED', nargs='+', type=argparse.FileType('r'), help='BED file for incorporated rNMPs')
     parser.add_argument('Genome', type=argparse.FileType('r'), help='Reference genome file')
     parser.add_argument('FASTQ', type=argparse.FileType('r'), help='FASTQ file for raw reads')
+    parser.add_argument('-d', type=int, default=0, help='Deviation to the rNMP. (10 means 10bp upstream of rNMP)')
     parser.add_argument('-o', default='match_analysis_results', help='Output basename')
     args = parser.parse_args()
 
     # Process raw reads and genome
-    rNMPs_raw = read_fastq(args.FASTQ)
+    rNMPs_raw = read_fastq(args.FASTQ, args.d)
     print('Raw reads loaded!')
     genome = read_genome(args.Genome)
     print('Genome loaded!')
@@ -78,7 +86,7 @@ def main():
         filename = bed.name.split('/')[-1].split('.')[0]
         with open(f'{args.o}_{filename}.bed', 'w') as fw:
             for l in bed:
-                data = get_rNMP_aligned(l, genome, rNMPs_raw)
+                data = get_rNMP_aligned(l, genome, rNMPs_raw, args.d)
                 fw.write('\t'.join(data) + '\n')
         print(f'{filename} processed!')
 
