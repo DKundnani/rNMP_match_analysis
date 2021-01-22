@@ -2,7 +2,7 @@
 
 import argparse
 import sys
-from collections import defaultdict
+import itertools as it
 
 
 def main():
@@ -11,9 +11,20 @@ def main():
     parser.add_argument('-o', default=sys.stdout, type=argparse.FileType('w'), help='Output basename')
     args = parser.parse_args()
 
+    # determine dinuc or mono
+    l = args.BED.readline()
+    ws = l.split('\t')
+    length = len(ws[3])
+    args.BED.seek(0)
+
     # initialization
-    data = [[0] * 4 for _ in range(4)]
-    order = {'A':0, 'C':1, 'G':2, 'T':3}
+    bases = ['A','C','G','T']
+    id = 0
+    order = {}
+    for k in it.product(bases, repeat=length):
+        order[''.join(k)] = id
+        id += 1
+    data = [[0] * (4**length) for _ in range(4**length)]
 
     # deal with each bed file
     for l in args.BED:
@@ -23,7 +34,7 @@ def main():
         data[order[ws[3]]][order[ws[4]]] += 1
 
     # output
-    args.o.write('ARS_in_reads\tA\tC\tG\tT\n')
+    args.o.write('ARS_in_reads\t' + '\t'.join(order.keys()) + '\n')
     for k, v in order.items():
         args.o.write(f'{k}\t' + '\t'.join([str(x) for x in data[v]]) + '\n')
 
