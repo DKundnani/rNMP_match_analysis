@@ -28,7 +28,7 @@ def read_fastq(fr, deviation, di):
             if di:
                 rNMPs_raw[name] = rc(l[11:13])
             else:
-                rNMPs_raw[name] = rc(l[11+deviation])
+                rNMPs_raw[name] = rc(l[11+deviation:61+deviation])
         line_num += 1
     return rNMPs_raw
 
@@ -88,6 +88,7 @@ def get_rNMP_aligned(l, genome, rNMPs_raw, deviation, di):
 
 
 def main():
+
     parser = argparse.ArgumentParser(description='Generate bed file to check if rNMP in raw reads match with rNMP in reference genome')
     parser.add_argument('BED', nargs='+', type=argparse.FileType('r'), help='BED file for incorporated rNMPs')
     parser.add_argument('Genome', type=argparse.FileType('r'), help='Reference genome file')
@@ -96,7 +97,7 @@ def main():
     parser.add_argument('--di', action='store_true', help='Use dinucleotide (NR) instead, cannot combine with -d')
     parser.add_argument('-o', default='match_analysis_results', help='Output basename')
     args = parser.parse_args()
-
+    
     assert not (args.di and args.d), 'There shouldn\'t be deviations when calculate dinucleotide'
 
     # Process raw reads and genome
@@ -106,6 +107,7 @@ def main():
     print('Genome loaded!')
 
     # deal with each bed file
+    
     for bed in args.BED:
         filename = bed.name.split('/')[-1].split('.')[0]
         with open(f'{args.o}_{filename}.bed', 'w') as fw:
@@ -114,7 +116,17 @@ def main():
                 if data:
                     fw.write('\t'.join(data) + '\n')
         print(f'{filename} processed!')
-
+    '''   
+    
+    filename = bed.name.split('/')[-1].split('.')[0]
+    with open(f'{args.o}_{filename}.bed', 'w') as fw:
+    for l in bed:
+    data = get_rNMP_aligned(l, genome, rNMPs_raw, args.d, args.di)
+    if data:
+    fw.write('\t'.join(data) + '\n')
+    print(f'{filename} processed!')
+    '''
+    
     print('Done!')
 
 
