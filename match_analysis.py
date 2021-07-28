@@ -47,7 +47,7 @@ def read_genome(fr):
             name = l[1:]
             seq = ''
         else:
-            seq += l
+            seq += l.upper()
     genome[name] = seq
     del genome[None]
     return genome
