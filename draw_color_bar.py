@@ -9,11 +9,9 @@ import os
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Draw color scale only')
+    parser = argparse.ArgumentParser(description='Draw heatmap for rNMP match/mismatch status')
     parser.add_argument('tsv', type=argparse.FileType('r'), help='Tsv file with incorporated rNMP match/mismatch status')
     parser.add_argument('-o', help='Output basename')
-    parser.add_argument('--palette', default='vlag', help='Seaborn palette name')
-    parser.add_argument('--font_scale', default=2, type=float, help='Font scale for the marker')
     args = parser.parse_args()
 
     if not args.o:
@@ -28,10 +26,10 @@ def main():
 
 
     # draw
-    sns.set(font_scale=args.font_scale)
+    sns.set(font_scale=1.5)
     fig, ax = plt.subplots(figsize=(7,6))
     plt.subplots_adjust(top=0.98, right=0.99)
-    sns.heatmap(data, vmin=0, vmax=1, annot=True, cmap=args.palette)
+    sns.heatmap(data, vmin=0, vmax=1, annot=True, cmap='vlag')
     ax.set_xticklabels(['A','C','G','U'])
     ax.set_yticklabels(['A','C','G','U'], rotation='horizontal')
 
@@ -44,7 +42,7 @@ def main():
         sep = '/'
     else:
         sep = '_'
-    fname = args.o + sep + args.tsv.name.split('/')[-1].split('.')[0] + '_color_scale.png'
+    fname = args.o + sep + args.tsv.name.split('/')[-1].split('.')[0] + '_match_analysis.png'
     plt.savefig(fname)
 
 
