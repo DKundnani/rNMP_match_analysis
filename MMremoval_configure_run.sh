@@ -11,9 +11,9 @@ pymatch='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storic
 reference='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/reference/sacCer2/sacCer2.fa' #Fasta file for reference genome
 genome=$(echo $reference.fai) #This assumes you have respective genome.sizes in the same folder with etx as .fai to the fasta file. You can edit if needed
 polyN='5' # number of polyN's to check including the ribo position Default=5: Will cleanup upto AAAArA mismatches in dA tialing library
-bedloc='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/results/coordinate/test/' #location with bed files - Make sure you have the bed files only required for analysis, or it will analyze all the files
+bedloc='/storage/coda1/p-fstorici3/0/dkundnani3/rich_project_bio-storici/Yeast_all/bed/Shortnuclrepeat' #location with bed files - Make sure you have the bed files only required for analysis, or it will analyze all the files
 fastqloc='/storage/coda1/p-fstorici3/0/shared/raw_reads' #Make sure the basename of files to be analysed is same as the basename of '.fq' files. Sample.bed used Sample.fq for analysis
-resultsloc='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/results/coordinate/testresults/' #location you want the results in 
+resultsloc='/storage/coda1/p-fstorici3/0/dkundnani3/rich_project_bio-storici/Yeast_all/bed/Shortnuclrepeat/all_polyNfiltered/' #location you want the results in 
 RrmpolyN='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/bin/rNMP_match_analysis/removepolyN.R' #removepolyN.R script 
 Ntail='A' #Nucleotide used for dN tailing (Default-'A')
 
