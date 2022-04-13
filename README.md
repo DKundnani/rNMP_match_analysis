@@ -2,10 +2,10 @@
 Check whether incorporated rNMPs in DNA match reference genome
 Table of Contents
 * [Installation](#Installation)
-  * [Getting the code](#Getting the code)
-  * [Creating the enviroment with required dependencies](#Creating the enviroment with required dependencies)
-* [Running Mismatch Removal](#Running Mismatch Removal)
-  * [Configure run](#Configure run)
+  * [Getting the code](#getting-the-code)
+  * [Creating the enviroment with required dependencies](#Creating-the-enviroment-with-required-dependencies)
+* [Running Mismatch Removal](#Running-Mismatch-Removal)
+  * [Configure run](#Configure-run)
   * [Filtration](#Filtration)
 * [Output](#Output)
 
