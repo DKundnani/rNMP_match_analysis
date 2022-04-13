@@ -15,26 +15,26 @@ Table of Contents
 ## Installation
 
 ### Getting the code
-'''bash
+```bash
 git clone https://github.com/DKundnani/rNMP_match_analysis.git 
-'''
+```
 
 ### Creating the enviroment with required dependencies
-'''bash
+```bash
 conda env create --file rNMP_match_analysis/mm_removal.yml
-'''
+```
 
 ## Running Mismatch Removal
 ### Configure run
-'''bash
+```bash
 vim MMremoval_configure_run.sh
 #Change the variables for you run as per mentions in the bash configure file
-'''
+```
 
 ### Filtration
-'''bash
+```bash
 bash MMremoval_configure_run.sh
 
-'''
+```
 ## Output
 
