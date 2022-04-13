@@ -42,5 +42,5 @@ bash MMremoval_configure_run.sh
   * Files with prefix 'poly_' : chr start stop upstream+rNMP(sequencing data) upstream+rNMP(reference genome) strand rNMP(sequencing data) rNMP(reference genome) (8 columns bed files)
   * files with prefix 'matches_' : Files with prefix 'poly_' filtered for matched column 7 & column 8
   * Files with suffix 'final.bed' : Files filtered for matched polyN upto user specified bases upstream of rNMP location
-  * chrM_mismatch_percentage.txt & chrM_mismatch_percentage.txt: Difference between the percetage of rNMP bases between the bed file provided and final bed in mitochondria and nucleus
+  * chrM_mismatch_percentage.txt & nucl_mismatch_percentage.txt: Difference between the percetage of rNMP bases between the bed file provided and final bed in mitochondria and nucleus
 
