@@ -14,6 +14,7 @@
 #Ntail='A' #Nucleotide used for dN tailing (Default-'A')
 
 mismatch_analysis() {
+	mkdir $resultsloc
     for bed in $(ls $bedloc/*.bed)
     do
     fastq=$(echo $fastqloc/$(basename $bed .bed).fq)
@@ -24,6 +25,7 @@ mismatch_analysis() {
 }
 
 filter_matches() {
+	
     for file in $(ls $resultsloc/MManalysis*)
     do
     cat $file | awk BEGIN'{FS=OFS="\t"}{print $1,$2,$3,$4,$5,$6,substr($4,length($4),1),substr($5,length($5),1)}' > $resultsloc/poly_$(basename $file)
@@ -73,7 +75,8 @@ cal_mm_percent() {
 		echo -e $(basename $bed .bed)'\t'$mm_A'\t'$mm_C'\t'$mm_G'\t'$mm_T'\t'$mm_total >> $resultsloc/nucl_mismatch_percent.txt
 	
     done
-	rm 
+	rm chrM_outtemp
+	rm nucl_outtemp
 }
 
 
