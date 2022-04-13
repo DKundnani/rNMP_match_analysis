@@ -23,6 +23,7 @@ echo ".....ACTIVATING ENVIROMENT...."
 source activate r_env
 source /storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/bin/rNMP_match_analysis/mismatch_cleanup.sh #run to activate following functions
 
+################################### DO NOT CHANGE/CONFIGURE BELOW THIS LINE ###################################
 ################################### Running the functions ---------TO BE RUN AS IT IS & STEP WISE----------------
 echo ".....RUNNING FUNCTIONS...."
 #Run the funcitons one by one and wait for them to finish OR just run this script
