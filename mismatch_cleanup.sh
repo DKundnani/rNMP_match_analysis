@@ -19,26 +19,32 @@ mismatch_analysis() {
     do
     fastq=$(echo $fastqloc/$(basename $bed .bed).fq)
     file=MManalysis_$(basename $bed)
-    python3 $pymatch $bed $reference $fastq -n $polyN -o $resultsloc/MManalysis
+    python3 $pymatch $bed $reference $fastq -n $polyN -o $resultsloc/MManalysis &
     done
-    
+    wait
+
+}
+
+single_filter_matches() {
+    cat $1 | awk BEGIN'{FS=OFS="\t"}{print $1,$2,$3,$4,$5,$6,substr($4,length($4),1),substr($5,length($5),1)}' > $resultsloc/poly_$(basename $1)
+    cat $resultsloc/poly_$(basename $1) | awk -v OFS="\t" -F"\t" '{if($7==$8) {print $0} }' > $resultsloc/matches_$(basename $1)
 }
 
 filter_matches() {
-	
     for file in $(ls $resultsloc/MManalysis*)
     do
-    cat $file | awk BEGIN'{FS=OFS="\t"}{print $1,$2,$3,$4,$5,$6,substr($4,length($4),1),substr($5,length($5),1)}' > $resultsloc/poly_$(basename $file)
-    cat $resultsloc/poly_$(basename $file) | awk -v OFS="\t" -F"\t" '{if($7==$8) {print $0} }' > $resultsloc/matches_$(basename $file)
+		single_filter_matches $file &
     done
+	wait
 
 }
 
 remove_polyN() {
     for file in $(ls $resultsloc/matches_*)
     do
-	Rscript $RrmpolyN -f $file -c 4 -t $Ntail -n $polyN -o $resultsloc
+	Rscript $RrmpolyN -f $file -c 4 -t $Ntail -n $polyN -o $resultsloc &
     done
+	wait
 }
 
 cal_mm_percent() {
@@ -47,10 +53,11 @@ cal_mm_percent() {
 	
 	for bed in $(ls $bedloc/*.bed)
     do
-		bedtools getfasta -tab -s -fi $reference -bed $bed | grep chrM > $resultsloc/chrM_intemp
-		bedtools getfasta -tab -s -fi $reference -bed $resultsloc/*$(basename $bed .bed)*final.bed | grep chrM > $resultsloc/chrM_outtemp
-		bedtools getfasta -tab -s -fi $reference -bed $bed | grep -v chrM > $resultsloc/nucl_intemp
-		bedtools getfasta -tab -s -fi $reference -bed $resultsloc/*$(basename $bed .bed)*final.bed | grep -v chrM > $resultsloc/nucl_outtemp
+		bedtools getfasta -tab -s -fi $reference -bed $bed | grep chrM > $resultsloc/chrM_intemp &
+		bedtools getfasta -tab -s -fi $reference -bed $resultsloc/*$(basename $bed .bed)*final.bed | grep chrM > $resultsloc/chrM_outtemp &
+		bedtools getfasta -tab -s -fi $reference -bed $bed | grep -v chrM > $resultsloc/nucl_intemp &
+		bedtools getfasta -tab -s -fi $reference -bed $resultsloc/*$(basename $bed .bed)*final.bed | grep -v chrM > $resultsloc/nucl_outtemp &
+		wait
 
 		for N in A C G T; do
 			before=$(cat $resultsloc/chrM_intemp | grep -ie $N$ | wc -l)
