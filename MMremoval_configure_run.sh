@@ -31,6 +31,6 @@ echo ".....RUNNING FUNCTIONS...."
 mismatch_analysis 		# Will run mismatch_analysis and generate files with prefix 'MManalysis' giving the reference and fastq sequences for 'polyN' bases upstream of rNMP 
 filter_matches			# Filter matches from the previous results
 remove_polyN 			# Will filter polyN
-cal_mm_percent			# Will calculate mismatch percentages in the input bed files and filtered files
+cal_mm_percent chrM			# Will calculate mismatch percentages in the input bed files and filtered files and separate chrM from other chromosomes
 
 ##################################
